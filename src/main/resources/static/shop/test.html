@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js" ></script>
+        <script>
+            function upload(){
+                alert(111)
+                var file =  document.getElementById("file").files[0];
+            }
+            $(function(){
+                $("#upload_image").click(function(){
+                    var file =  document.getElementById("file").files[0];
+                    var username = $("#un").val();
+					 alert(username);
+                    alert(file);
+                    var data = new FormData();
+                    data.append("file",file);
+ 					data.append("username",username);
+                    $.ajax({
+                         type:"post",
+                         url:"http://192.168.1.73:80/Image/upload",
+                         contentType:"multipart/form-data",
+                         data: data,
+                         cache : false,
+                         processData : false,
+                         contentType : false,
+                         type: 'POST',
+                         timeout:3000,
+                         beforeSend: function(request) {
+                             request.setRequestHeader("Authorization", 'token');
+                        },
+                        success:function(result){
+                            alert("添加成功");
+                        },
+                        error:function(result){
+                           // alert("添加失败!");
+								 alert(result);
+                        }
+                    });
+                });
+            })
+        </script>
+    </head>
+    <body>
+        <form>
+            <input type="file" name="file" id="file"/>
+            <input type="button" id="upload_image"  value="开始上传" />
+            <input type="text" name="username" id="un" value="123"/>
+        </form>
+    </body>
+</html>
