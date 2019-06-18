@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,16 +89,18 @@ public class ImageController extends BaseAction{
 	
 	@RequestMapping("/message")
 	@ResponseBody
-	public ResultType message(HttpServletRequest request) {
+	public Map message(HttpServletRequest request) {
 		log.info("商品信息接口");
-		String title =  request.getParameter("title");
-		String price =  request.getParameter("price");
-		String note =  request.getParameter("note");
+		String title =  request.getParameter("goodsName");
+	//	String price =  request.getParameter("price");
+	//	String note =  request.getParameter("note");
 		log.info("商品名称："+title);
-		log.info("商品价格："+price);
-		log.info("商品简介："+price);
+	//	log.info("商品价格："+price);
+	//	log.info("商品简介："+price);
 		log.info("返回参数："+ResultType.creat("success"));
-		return ResultType.creat("success");
+		Map<String,Integer> map = new HashMap();
+		map.put("goodsId", 1);
+		return map;
 	}
 	
 	/*
@@ -112,4 +116,18 @@ public class ImageController extends BaseAction{
 		return result;
 	}
 	
+	@RequestMapping("/listGoods")
+	@ResponseBody
+	public Map listGoods() {
+		Map<String,Object> map = new HashMap();
+	//	{ "id": 1, "bannerName": "全新上市", "imgUrl": "/images/banner01.jpg", "clickUrl": "", "seq": 1 },
+		map.put("id", 10);
+		map.put("bannerName", "nihao");
+		map.put("imgUrl", "https://chat.foreseers.cn:443/132/1558073197658.jpg");
+	//	map.put("clickUrl", );
+		map.put("seq", 10);
+		Map maps = new HashMap();
+		maps.put("goodsList", map);
+		return maps;
+	}
 }
