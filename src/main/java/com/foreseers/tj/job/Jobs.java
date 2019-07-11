@@ -11,7 +11,7 @@ import com.foreseers.tj.redis.util.DeleteLog;
 public class Jobs {
 					//0 0 1 * * ?(凌晨一点)
 					//0 0 0 L * ?(每个月的最后一天的0时)
-//	@Scheduled(cron="0 0,54 0,16 ? * ? ")
+	@Scheduled(cron="0 0 0 28 * ?  ")
 	public void getTest() {
 		
 		System.out.println("现在的时间是："+new Date());
@@ -22,6 +22,7 @@ public class Jobs {
 		
 		String geshi = ".gz";
 		DeleteLog.refreshFileList(strPath, geshi);
+		System.out.println("删除上个月的log文件成功");
 	}
 	
 }

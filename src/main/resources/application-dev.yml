@@ -1,0 +1,45 @@
+
+server:
+  port: 80
+
+web:
+  upload-path: e:/dt/image/  #/var/weixin/image/   e:/dt/image/
+
+httpurl: http://192.168.18.6:80/    
+spring:
+  datasource:
+    name : my
+    url : jdbc:mysql://39.106.187.201:3306/weixin?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
+    username : lover
+    password : forDating
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20   
+  resources:
+    static-locations: classpath:/static/,file:${web.upload-path}
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 6000  # 连接超时时长（毫秒）
+    password: pass
+    jedis:
+      pool:
+        max-active: 2000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 500      # 连接池中的最大空闲连接
+        min-idle: 0       # 连接池中的最小空闲连接
+
+mybatis:
+  mapper-locations:  classpath:mappering/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.foreseers.tj.model  # 注意：对应实体类的路径com.example.demo.model

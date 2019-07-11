@@ -50,6 +50,9 @@ public class DeleteLog {
 	        String dateStr =  new SimpleDateFormat("yy-MM-dd").format(new Date()); //2019-06-14
 	        String[] dateStrs = dateStr.split("-");
 	        String monthStr = dateStrs[dateStrs.length-2];
+	     //   String monthdate = (Integer.parseInt(monthStr)-2)+"";
+	        
+	     //   System.out.println("要删除的月份："+monthdate);
 	        if(!month.equals(monthStr)) {
 	        	//如果不是这个月的文件
 	        	System.out.println("正在删除：" + strFileName);
