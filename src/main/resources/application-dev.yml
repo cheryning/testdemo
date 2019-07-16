@@ -5,7 +5,7 @@ server:
 web:
   upload-path: e:/dt/image/  #/var/weixin/image/   e:/dt/image/
 
-httpurl: http://192.168.18.6:80/    
+httpurl: http://192.168.18.4:80/    
 spring:
   datasource:
     name : my

@@ -12,6 +12,8 @@
     <result column="publishTime" jdbcType="VARCHAR" property="publishtime" />
     <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+     <result column="openid" jdbcType="VARCHAR" property="openid" />
+     <result column="comcount" jdbcType="INTEGER" property="comcount" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, goodsName, goodsDesc, newPrice, oldPrice, authorName, img, publishTime, updated, status
+    id, goodsName, goodsDesc, newPrice, oldPrice, authorName, img, publishTime, updated, status, openid, comcount
   </sql>
   <select id="selectByExample" parameterType="com.foreseers.tj.model.GoodsExample" resultMap="BaseResultMap">
     select
@@ -109,6 +111,14 @@
     <include refid="Base_Column_List" />
     from goods
     where authorName = #{authorName}
+  </select>
+  
+    <!-- selectByOpenid，通过openid查询 -->
+  <select id="selectByOpenid" parameterType="String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where openid = #{openid}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -167,6 +177,9 @@
      <if test="status != null">
         status,
       </if>
+      <if test="openid != null">
+        openid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="goodsname != null">
@@ -195,6 +208,9 @@
       </if>
        <if test="status != null">
         #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -294,6 +310,13 @@
       img = #{img,jdbcType=VARCHAR},
       publishTime = #{publishtime,jdbcType=VARCHAR},
       updated = #{updated,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+ <!-- 商品的评论数加一 --> 
+  <update id="updateCount" parameterType="java.lang.Integer">
+    update goods
+    set comcount = comcount+1
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

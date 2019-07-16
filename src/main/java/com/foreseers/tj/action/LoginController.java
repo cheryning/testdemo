@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.foreseers.tj.http.RedisClient;
 import com.foreseers.tj.http.httptest;
+import com.foreseers.tj.mapper.UserinfoDao;
+import com.foreseers.tj.model.Userinfo;
 import com.foreseers.tj.redis.util.CheckUtil;
 import com.foreseers.tj.redis.util.MessageUtil;
 import com.foreseers.tj.redis.util.RedisUtil;
@@ -38,7 +41,8 @@ public class LoginController {
 //	
 //	@Autowired
 //	private RedisClient redisClient;
-	
+	@Autowired
+	private UserinfoDao userinfoDao;
 	
 	@RequestMapping(value = "/login",method=RequestMethod.GET)
 	public void login(HttpServletRequest request,HttpServletResponse reponse) {
@@ -162,5 +166,34 @@ public class LoginController {
    	Jedis jedis = RedisUtil.getJedis();
     	
     	return jedis.get("my");
+    }
+    
+    @RequestMapping("/setUser")
+    @ResponseBody
+    public String setUser(@RequestBody String userInfo) {
+    	log.info("保存用户信息");
+    	JSONObject json = JSONObject.parseObject(userInfo);
+    	String nickName = json.getString("nickName");
+    	String avatarUrl = json.getString("avatarUrl");
+    	String gender = json.getString("gender");
+    	String openid = json.getString("openid");   	
+    	log.info("用户名称："+nickName);
+    	log.info("openid："+openid);
+    	
+    	Userinfo userinfo = new Userinfo();
+    	userinfo.setNickname(nickName);
+    	userinfo.setAvatarurl(avatarUrl);
+    	userinfo.setGender(gender);
+    	userinfo.setOpenid(openid);
+    	try{
+    		Userinfo user = userinfoDao.selectByOpenid(openid);
+    		if(user == null) {
+    			userinfoDao.insertSelective(userinfo);
+    		}
+    		return "success";
+    	}catch(Exception e) {
+    		return "fail";
+    	}
+	
     }
 }

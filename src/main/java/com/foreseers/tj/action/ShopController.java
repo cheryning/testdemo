@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
 import com.foreseers.tj.mapper.GoodsDao;
+import com.foreseers.tj.mapper.UserMessageDao;
+import com.foreseers.tj.mapper.UserinfoDao;
 import com.foreseers.tj.model.Goods;
 import com.foreseers.tj.model.GoodsExample;
+import com.foreseers.tj.model.UserMessage;
+import com.foreseers.tj.model.Userinfo;
 
 @Controller
 @RequestMapping("/shop")
@@ -29,6 +33,12 @@ public class ShopController extends BaseAction{
 	
 	@Autowired
 	private GoodsDao goodsDao;
+	
+	@Autowired
+	private UserinfoDao userinfoDao;
+	
+	@Autowired
+	private UserMessageDao userMessageDao;
 	
 	@RequestMapping("/publishShop")
 	@ResponseBody
@@ -41,6 +51,8 @@ public class ShopController extends BaseAction{
 		String oldPrice = josn.getString("oldPrice");
 		String mobile = josn.getString("mobile");  //；联系电话
 		String authorName = josn.getString("authorName");  //发布的人
+		String openid = josn.getString("openid");
+		log.info("openid:"+openid);
 		log.info("商品名称:"+goodsName+",商品描述"+goodsDesc+",价格："+newPrice+",联系电话:"+mobile+",发布的人："+authorName);
 		Date date = new Date();
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,6 +64,7 @@ public class ShopController extends BaseAction{
 		goods.setOldprice(Double.parseDouble(oldPrice));
 		goods.setAuthorname(authorName);
 		goods.setPublishtime(publishtime);
+		goods.setOpenid(openid);
 		goods.setStatus("在售");
 		
 		 goodsDao.insertSelective(goods);
@@ -79,6 +92,13 @@ public class ShopController extends BaseAction{
 	@ResponseBody
 	public Map getGoodsDetails(String goodsId) {
 		Goods goods = goodsDao.selectByPrimaryKey(Integer.parseInt(goodsId));
+		String openid = goods.getOpenid();
+		Userinfo user =  userinfoDao.selectByOpenid(openid);
+		int goodsid = goods.getId();
+		List<UserMessage> list = userMessageDao.selectByGoodskey(goodsid);
+		log.info("评论列表："+list);
+		
+		log.info("评论数："+goods.getComcount());
 		Map<String,Object> map = new HashMap<>();
 		map.put("goodsId", goods.getId());
 		map.put("goodsName", goods.getGoodsname());
@@ -88,16 +108,20 @@ public class ShopController extends BaseAction{
 		map.put("goodsCreateTime", goods.getPublishtime());
 		map.put("goodsImageUrl", goods.getImg());
 		map.put("goodsAuthorName", goods.getAuthorname());
+		map.put("img", user.getAvatarurl());
+		map.put("msgCount", goods.getComcount());
+		map.put("messageList", list);
 		return map;
 	}
 	
 	@RequestMapping("/getGoodsByAuthor")
 	@ResponseBody
-	public Map getGoodsByAuthor(String author) {
+	public Map getGoodsByAuthor(String openid) {
 		
 		log.info("获取自己的发布商品");
-		log.info("authorName:"+author);
-		List<Goods> goods = goodsDao.selectByName(author);
+		log.info("authorName:"+openid);
+	//	List<Goods> goods = goodsDao.selectByName(author);
+		List<Goods> goods = goodsDao.selectByOpenid(openid);
 		
 		log.info("查询出来的商品:"+goods);
 		Map<String,List> map = new HashMap<>();

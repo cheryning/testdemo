@@ -29,4 +29,8 @@ public interface GoodsDao {
     int updateByPrimaryKey(Goods record);
     
     List<Goods> selectByName(String authorName);
+
+	List<Goods> selectByOpenid(String openid);
+
+	void updateCount(int id);
 }

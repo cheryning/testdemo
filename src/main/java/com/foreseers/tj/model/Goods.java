@@ -47,11 +47,32 @@ public class Goods implements Serializable {
     private Date updated;
     
     private String status;
+    
+    private String openid;
+    
+    private Integer comcount;
 
     private static final long serialVersionUID = 1L;
 
     
-    public String getStatus() {
+    
+    public Integer getComcount() {
+		return comcount;
+	}
+
+	public void setComcount(Integer comcount) {
+		this.comcount = comcount;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getStatus() {
 		return status;
 	}
 
@@ -193,28 +214,17 @@ public class Goods implements Serializable {
 		if (updated != null)
 			builder.append("updated=").append(updated).append(", ");
 		if (status != null)
-			builder.append("status=").append(status);
+			builder.append("status=").append(status).append(", ");
+		if (openid != null)
+			builder.append("openid=").append(openid).append(", ");
+		if (comcount != null)
+			builder.append("comcount=").append(comcount);
 		builder.append("]");
 		return builder.toString();
 	}
 
-//    @Override
-//    public String toString() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(getClass().getSimpleName());
-//        sb.append(" [");
-//        sb.append("Hash = ").append(hashCode());
-//        sb.append(", id=").append(id);
-//        sb.append(", goodsname=").append(goodsname);
-//        sb.append(", goodsdesc=").append(goodsdesc);
-//        sb.append(", newprice=").append(newprice);
-//        sb.append(", oldprice=").append(oldprice);
-//        sb.append(", authorname=").append(authorname);
-//        sb.append(", img=").append(img);
-//        sb.append(", publishtime=").append(publishtime);
-//        sb.append(", updated=").append(updated);
-//        sb.append(", serialVersionUID=").append(serialVersionUID);
-//        sb.append("]");
-//        return sb.toString();
-//    }
+
+
+
+
 }
