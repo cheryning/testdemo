@@ -129,4 +129,22 @@ public class ShopController extends BaseAction{
 		return map;
 	}
 	
+	@RequestMapping("/deleteMyGoods")
+	@ResponseBody
+	public Map deleteMyGoods(@RequestBody String data ) {
+		JSONObject json = JSONObject.parseObject(data);
+		int id = json.getIntValue("id");
+		String openid = json.getString("openid");
+		Map<String,Object> map = new HashMap<>();
+		
+		try {
+			goodsDao.deleteByPrimaryKey(id);
+			map.put("success", true);
+		}catch(Exception e) {
+			map.put("success", false);
+		}	
+		
+		return map;
+	}
+	
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -161,5 +162,42 @@ public class ImageController extends BaseAction{
 		Map maps = new HashMap();
 		maps.put("goodsList", list);
 		return maps;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/picture")
+	public String picture(MultipartFile file) throws IllegalStateException, IOException {
+		String name = file.getOriginalFilename(); // 得到图片的名称
+		String rand = getRandom();
+		String filename = rand+name; //图片重命名
+		
+		String saveStr = "E:\\dt";   //图片的保存地址
+		String saveFile = saveStr+"/"+filename;
+		
+		file.transferTo(new File(saveFile));  //保存图片
+		return "success";
+	}
+	
+	/*
+	 * 多长图片上传
+	 */
+	@RequestMapping("/pictures")
+	@ResponseBody
+	public List pictures(@RequestParam("uploadFiles") MultipartFile[] files  ) {
+		List<Map<String,Object>> root = new ArrayList<Map<String,Object>>();
+		if(files != null && files.length > 0) {
+			for(MultipartFile file : files) {  //循环文件数组
+				Map<String,Object> map = new HashMap<>();
+				//下面便是保存文件的操作
+				log.info("图片名称："+file.getOriginalFilename());
+				log.info("图片类型："+file.getContentType());
+				log.debug("保存图片");
+				map.put("result_msg", "上传成功");
+				
+				root.add(map);
+			}
+		}
+		
+		return root;
 	}
 }
